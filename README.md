@@ -1,6 +1,6 @@
 # Cultural Fest Registration Platform
 
-A FastAPI and MySQL-based web application for managing cultural fest registrations, featuring an encrypted database, secure admin panel, and an aesthetic newspaper-themed frontend.
+A FastAPI and MySQL-based web application for managing cultural fest registrations, featuring an encrypted database, secure admin panel, and an aesthetic newspaper-themed frontend with PARALLAX EFFECT.
 
 ## Demo & Previews
 
