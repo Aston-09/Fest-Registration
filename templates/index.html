@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block title %}Front Page - The Cultural Fest Gazette{% endblock %}
+
+{% block content %}
+<div class="parallax-container">
+    <div class="hero-section">
+        <div class="hero-bg" data-parallax data-parallax-speed="0.5" style="background-image: url('/static/images/hero-bg.jpg');"></div>
+        <div class="hero-content" data-parallax data-parallax-speed="-0.2">
+            <h2 class="hero-title">CULTURAL<br>FEST</h2>
+            <p class="hero-subtitle">A Grand Celebration of Art & Intellect</p>
+        </div>
+    </div>
+</div>
+
+<div class="main-content grid-layout">
+    <article class="featured-article column-span-2">
+        <h3 class="article-headline">An Invitation to Excellence</h3>
+        <div class="article-body">
+            <p><span class="drop-cap">T</span>he season of celebration is upon us. The university proudly announces the commencement of its annual Cultural Fest, an extraordinary convergence of talent, creativity, and intellectual rigor.</p>
+            <p>From captivating musical performances to rigorous debate competitions, this year's festival promises an array of events designed to challenge the mind and stir the soul. We invite all scholars and artisans to partake in this grand tradition.</p>
+        </div>
+    </article>
+
+    <aside class="quick-stats column-span-1">
+        <h4 class="sidebar-title">Fest In Numbers</h4>
+        <div class="stat-box">
+            <span class="stat-number" id="stat-participants">--</span>
+            <span class="stat-label">Participants</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-number" id="stat-events">--</span>
+            <span class="stat-label">Events</span>
+        </div>
+        <div class="stat-box">
+            <span class="stat-number" id="stat-registrations">--</span>
+            <span class="stat-label">Registrations</span>
+        </div>
+    </aside>
+</div>
+
+<div class="torn-divider section-divider"></div>
+
+<section class="latest-events-section">
+    <h3 class="section-title">Latest Announcements</h3>
+    <div class="event-teasers" id="recent-events-container">
+        <!-- Loaded via JS -->
+        <p class="loading-text">Gathering the latest reports...</p>
+    </div>
+</section>
+{% endblock %}

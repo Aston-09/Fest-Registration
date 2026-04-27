@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}The Cultural Fest Gazette{% endblock %}</title>
+    
+    <!-- Google Fonts for Newspaper Aesthetic -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bodoni+Moda:ital,opsz,wght@0,6..96,400..900;1,6..96,400..900&family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400;1,600&family=Playfair+Display:ital,wght@0,400..900;1,400..900&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body class="paper-theme">
+    
+    <header class="masthead">
+        <div class="masthead-top">
+            <span class="date" id="current-date">Volume I. No. 1</span>
+            <span class="edition">DAILY EDITION</span>
+            <span class="price">Two Cents</span>
+        </div>
+        
+        <h1 class="newspaper-title">The Cultural Fest Gazette</h1>
+        
+        <nav class="main-nav">
+            <ul>
+                <li><a href="/">Front Page</a></li>
+                <li><a href="/page/participants">Register</a></li>
+                <li><a href="/page/events">Events</a></li>
+                <li><a href="/page/registrations">Registrations</a></li>
+
+            </ul>
+        </nav>
+        
+        <div class="torn-divider"></div>
+    </header>
+
+    <main class="content-wrapper">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="newspaper-footer">
+        <div class="torn-divider footer-divider"></div>
+        <div class="footer-content">
+            <p>&copy; <span id="year"></span> The Cultural Fest Gazette. All rights reserved.</p>
+            <p class="fine-print">Published independently for the enlightenment and entertainment of the university community.</p>
+        </div>
+    </footer>
+
+    <script src="/static/js/main.js"></script>
+</body>
+</html>

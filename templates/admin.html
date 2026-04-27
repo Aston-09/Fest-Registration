@@ -1,0 +1,594 @@
+{% extends "base.html" %}
+
+{% block title %}Editor's Office — The Cultural Fest Gazette{% endblock %}
+
+{% block content %}
+
+<!-- ═══════════════════════════════════════ -->
+<!-- LOGIN GATE                              -->
+<!-- ═══════════════════════════════════════ -->
+<div id="admin-login-gate" class="admin-gate">
+    <div class="gate-box">
+        <div class="gate-lock-icon">🔐</div>
+        <h2 class="gate-title">Editor's Office</h2>
+        <p class="gate-subtitle">This chamber is reserved for authorized personnel.<br>Present your encryption key to proceed.</p>
+        
+        <form id="admin-login-form" class="gate-form" autocomplete="off">
+            <div class="form-group">
+                <label for="admin-key-input">Encryption Key</label>
+                <input type="password" id="admin-key-input" placeholder="Enter your Fernet key..." required autocomplete="off">
+            </div>
+            <button type="submit" class="btn-primary gate-btn" id="admin-login-btn">
+                <span class="btn-text">Unlock the Office</span>
+                <span class="btn-spinner hidden">⟳</span>
+            </button>
+        </form>
+        <div id="gate-error" class="form-message error" style="display:none;"></div>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ADMIN DASHBOARD (hidden until auth)     -->
+<!-- ═══════════════════════════════════════ -->
+<div id="admin-dashboard" class="admin-panel" style="display:none;">
+    
+    <!-- Dashboard Header -->
+    <div class="admin-header">
+        <div class="admin-header-left">
+            <h2 class="page-title" style="font-size:2.8rem; margin-bottom:0.25rem;">Editor's Office</h2>
+            <p class="page-subtitle" style="margin-bottom:0;">Administrative Command Center</p>
+        </div>
+        <div class="admin-header-right">
+            <span class="admin-session-badge" id="session-badge">● Session Active</span>
+            <button class="btn-logout" id="admin-logout-btn" onclick="adminLogout()">✕ Log Out</button>
+        </div>
+    </div>
+
+    <div class="torn-divider" style="margin:1.5rem 0;"></div>
+
+    <!-- Stats Row -->
+    <div class="admin-stats-row">
+        <div class="admin-stat-card">
+            <span class="admin-stat-number" id="admin-stat-p">—</span>
+            <span class="admin-stat-label">Participants</span>
+        </div>
+        <div class="admin-stat-card">
+            <span class="admin-stat-number" id="admin-stat-e">—</span>
+            <span class="admin-stat-label">Events</span>
+        </div>
+        <div class="admin-stat-card">
+            <span class="admin-stat-number" id="admin-stat-r">—</span>
+            <span class="admin-stat-label">Registrations</span>
+        </div>
+        <div class="admin-stat-card admin-stat-enc">
+            <span class="admin-stat-number" id="admin-stat-enc" style="font-size:1.4rem;">—</span>
+            <span class="admin-stat-label">Encryption</span>
+        </div>
+    </div>
+
+    <!-- Search Bar -->
+    <div class="admin-search-bar">
+        <div class="search-input-wrap">
+            <span class="search-icon">⌕</span>
+            <input type="text" id="admin-search-input" placeholder="Search across all records..." autocomplete="off">
+        </div>
+        <button class="btn-search" onclick="adminSearch()">Search</button>
+    </div>
+
+    <!-- Search Results (hidden by default) -->
+    <div id="admin-search-results" class="admin-section" style="display:none;">
+        <h3 class="section-title" style="font-size:1.8rem;">Search Results</h3>
+        <button class="btn-clear-search" onclick="clearSearch()">✕ Clear Search</button>
+        <div id="search-results-content"></div>
+    </div>
+
+    <!-- Tab Navigation -->
+    <div class="admin-tabs">
+        <button class="admin-tab active" data-tab="participants" onclick="switchAdminTab('participants')">
+            Participants
+        </button>
+        <button class="admin-tab" data-tab="events" onclick="switchAdminTab('events')">
+            Events
+        </button>
+        <button class="admin-tab" data-tab="registrations" onclick="switchAdminTab('registrations')">
+            Registrations
+        </button>
+    </div>
+
+    <!-- Tab Content -->
+    <div class="admin-tab-content">
+        <!-- Participants Tab -->
+        <div id="tab-participants" class="admin-section tab-pane active">
+            <div class="table-responsive">
+                <table class="newspaper-table admin-table" id="admin-participants-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Name</th>
+                            <th>College</th>
+                            <th>Department</th>
+                            <th>Year</th>
+                            <th>Phone</th>
+                            <th>Email</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="7" class="loading-text">Loading records...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Events Tab -->
+        <div id="tab-events" class="admin-section tab-pane" style="display:none;">
+            <div class="classified-box" style="margin-bottom: 2rem;">
+                <h4 class="classified-title">Add New Event</h4>
+                <p class="classified-desc">Create a new event. Specify an Event ID which participants will use to register.</p>
+                
+                <form id="admin-add-event-form" class="newspaper-form">
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="admin_event_id">Event ID</label>
+                            <input type="number" id="admin_event_id" name="event_id" placeholder="e.g. 101" required>
+                        </div>
+                        <div class="form-group half">
+                            <label for="admin_event_name">Event Name</label>
+                            <input type="text" id="admin_event_name" name="event_name" required>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="admin_category">Category</label>
+                            <select id="admin_category" name="category" required>
+                                <option value="Cultural">Cultural</option>
+                                <option value="Technical">Technical</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Literary">Literary</option>
+                                <option value="Arts">Arts</option>
+                            </select>
+                        </div>
+                        <div class="form-group half">
+                            <label for="admin_type">Type</label>
+                            <select id="admin_type" name="type" required>
+                                <option value="Solo">Solo</option>
+                                <option value="Group">Group</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group half">
+                            <label for="admin_registration_fee">Reg. Fee (₹)</label>
+                            <input type="number" step="0.01" id="admin_registration_fee" name="registration_fee" required>
+                        </div>
+                        <div class="form-group half">
+                            <label for="admin_prize_pool">Prize Pool (₹)</label>
+                            <input type="number" step="0.01" id="admin_prize_pool" name="prize_pool" required>
+                        </div>
+                    </div>
+                    
+                    <button type="submit" class="btn-primary">Add Event</button>
+                </form>
+                <div id="admin-event-msg" class="form-message"></div>
+            </div>
+
+            <div class="table-responsive">
+                <table class="newspaper-table admin-table" id="admin-events-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Event Name</th>
+                            <th>Category</th>
+                            <th>Type</th>
+                            <th>Fee (₹)</th>
+                            <th>Prize (₹)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="6" class="loading-text">Loading records...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Registrations Tab -->
+        <div id="tab-registrations" class="admin-section tab-pane" style="display:none;">
+            <div class="table-responsive">
+                <table class="newspaper-table admin-table" id="admin-registrations-table">
+                    <thead>
+                        <tr>
+                            <th>Participant</th>
+                            <th>Email</th>
+                            <th>Event</th>
+                            <th>Date</th>
+                            <th>Payment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td colspan="5" class="loading-text">Loading records...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Record Counts -->
+    <div class="admin-footer-info">
+        <span id="admin-record-count" class="record-count-label"></span>
+    </div>
+</div>
+
+<!-- ═══════════════════════════════════════ -->
+<!-- ADMIN JAVASCRIPT                        -->
+<!-- ═══════════════════════════════════════ -->
+<script>
+(function() {
+    const gate     = document.getElementById('admin-login-gate');
+    const dashboard = document.getElementById('admin-dashboard');
+    const loginForm = document.getElementById('admin-login-form');
+    const keyInput  = document.getElementById('admin-key-input');
+    const gateError = document.getElementById('gate-error');
+    const searchInput = document.getElementById('admin-search-input');
+
+    // ── Check session on load ──
+    fetch('/admin/api/verify')
+        .then(r => r.json())
+        .then(data => {
+            if (data.authenticated) {
+                showDashboard();
+            }
+        })
+        .catch(() => {});
+
+    // ── Login form handler ──
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        gateError.style.display = 'none';
+
+        const btn = document.getElementById('admin-login-btn');
+        btn.querySelector('.btn-text').textContent = 'Verifying...';
+        btn.disabled = true;
+
+        try {
+            const res = await fetch('/admin/login', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ key: keyInput.value })
+            });
+            const data = await res.json();
+
+            if (data.ok) {
+                showDashboard();
+            } else {
+                gateError.textContent = data.error || 'Authentication failed.';
+                gateError.style.display = 'block';
+                keyInput.value = '';
+                keyInput.focus();
+
+                // Shake animation
+                const gateBox = document.querySelector('.gate-box');
+                gateBox.classList.add('shake');
+                setTimeout(() => gateBox.classList.remove('shake'), 600);
+            }
+        } catch (err) {
+            gateError.textContent = 'Connection error. Is the server running?';
+            gateError.style.display = 'block';
+        }
+
+        btn.querySelector('.btn-text').textContent = 'Unlock the Office';
+        btn.disabled = false;
+    });
+
+    // ── Enter key on search ──
+    searchInput.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') adminSearch();
+    });
+
+    // ── Show dashboard ──
+    function showDashboard() {
+        gate.style.display = 'none';
+        dashboard.style.display = 'block';
+        dashboard.classList.add('fade-in');
+        loadAllData();
+    }
+
+    // ── Load all admin data ──
+    async function loadAllData() {
+        await Promise.all([
+            loadStats(),
+            loadParticipants(),
+            loadEvents(),
+            loadRegistrations()
+        ]);
+    }
+
+    async function loadStats() {
+        try {
+            const res = await fetch('/admin/api/stats');
+            if (res.status === 401) { forceLogout(); return; }
+            const data = await res.json();
+
+            document.getElementById('admin-stat-p').textContent = data.participants;
+            document.getElementById('admin-stat-e').textContent = data.events;
+            document.getElementById('admin-stat-r').textContent = data.registrations;
+
+            const encEl = document.getElementById('admin-stat-enc');
+            const encMap = {
+                'encrypted':  '🔒 ENCRYPTED',
+                'plaintext':  '🔓 PLAINTEXT',
+                'no_key':     '⚠ NO KEY',
+                'no_data':    '— EMPTY'
+            };
+            encEl.textContent = encMap[data.encryption] || data.encryption;
+
+            // Color the encryption card
+            const encCard = encEl.closest('.admin-stat-card');
+            encCard.classList.remove('enc-ok', 'enc-warn', 'enc-danger');
+            if (data.encryption === 'encrypted') encCard.classList.add('enc-ok');
+            else if (data.encryption === 'plaintext') encCard.classList.add('enc-warn');
+            else encCard.classList.add('enc-danger');
+        } catch (err) {
+            console.error('Stats error:', err);
+        }
+    }
+
+    async function loadParticipants() {
+        const tbody = document.querySelector('#admin-participants-table tbody');
+        try {
+            const res = await fetch('/admin/api/participants');
+            if (res.status === 401) { forceLogout(); return; }
+            const data = await res.json();
+            const rows = data.data || [];
+
+            if (rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" class="loading-text">No participants found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rows.map(p => `
+                <tr>
+                    <td>${p.participant_id}</td>
+                    <td><strong>${esc(p.name)}</strong></td>
+                    <td>${esc(p.college)}</td>
+                    <td>${esc(p.department)}</td>
+                    <td>${p.year}</td>
+                    <td>${esc(p.phone)}</td>
+                    <td>${esc(p.email)}</td>
+                </tr>
+            `).join('');
+
+            updateRecordCount('participants', rows.length);
+        } catch (err) {
+            tbody.innerHTML = '<tr><td colspan="7" class="loading-text">Error loading data.</td></tr>';
+        }
+    }
+
+    async function loadEvents() {
+        const tbody = document.querySelector('#admin-events-table tbody');
+        try {
+            const res = await fetch('/admin/api/events');
+            if (res.status === 401) { forceLogout(); return; }
+            const data = await res.json();
+            const rows = data.data || [];
+
+            if (rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="loading-text">No events found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rows.map(e => `
+                <tr>
+                    <td>${e.event_id}</td>
+                    <td><strong>${esc(e.event_name)}</strong></td>
+                    <td>${esc(e.category)}</td>
+                    <td>${esc(e.type)}</td>
+                    <td>₹${e.registration_fee}</td>
+                    <td>₹${e.prize_pool}</td>
+                </tr>
+            `).join('');
+
+            updateRecordCount('events', rows.length);
+        } catch (err) {
+            tbody.innerHTML = '<tr><td colspan="6" class="loading-text">Error loading data.</td></tr>';
+        }
+    }
+
+    async function loadRegistrations() {
+        const tbody = document.querySelector('#admin-registrations-table tbody');
+        try {
+            const res = await fetch('/admin/api/registrations');
+            if (res.status === 401) { forceLogout(); return; }
+            const data = await res.json();
+            const rows = data.data || [];
+
+            if (rows.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="5" class="loading-text">No registrations found.</td></tr>';
+                return;
+            }
+
+            tbody.innerHTML = rows.map(r => {
+                const statusCls = (r.payment_status || '').toLowerCase() === 'paid' ? 'status-paid' : 'status-pending';
+                const regDate = r.reg_date ? new Date(r.reg_date).toLocaleDateString('en-US', {month: 'short', day: 'numeric', year: 'numeric'}) : '—';
+                return `
+                    <tr>
+                        <td><strong>${esc(r.name)}</strong></td>
+                        <td>${esc(r.email || '')}</td>
+                        <td>${esc(r.event_name)}</td>
+                        <td>${regDate}</td>
+                        <td class="${statusCls}">${r.payment_status}</td>
+                    </tr>
+                `;
+            }).join('');
+
+            updateRecordCount('registrations', rows.length);
+        } catch (err) {
+            tbody.innerHTML = '<tr><td colspan="5" class="loading-text">Error loading data.</td></tr>';
+        }
+    }
+
+    // ── Expose globals ──
+    window.switchAdminTab = function(tab) {
+        document.querySelectorAll('.admin-tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-pane').forEach(p => { p.style.display = 'none'; p.classList.remove('active'); });
+
+        document.querySelector(`.admin-tab[data-tab="${tab}"]`).classList.add('active');
+        const pane = document.getElementById(`tab-${tab}`);
+        pane.style.display = 'block';
+        pane.classList.add('active');
+    };
+
+    window.adminSearch = async function() {
+        const q = searchInput.value.trim();
+        if (!q) return;
+
+        const resultsDiv = document.getElementById('admin-search-results');
+        const content = document.getElementById('search-results-content');
+        resultsDiv.style.display = 'block';
+        content.innerHTML = '<p class="loading-text">Searching the archives...</p>';
+
+        try {
+            const res = await fetch(`/admin/api/search?q=${encodeURIComponent(q)}`);
+            if (res.status === 401) { forceLogout(); return; }
+            const data = await res.json();
+            const r = data.results;
+
+            let html = '';
+            const totalResults = (r.participants?.length || 0) + (r.events?.length || 0) + (r.registrations?.length || 0);
+
+            if (totalResults === 0) {
+                html = `<p class="loading-text">No records match "<strong>${esc(q)}</strong>".</p>`;
+            } else {
+                // Participants results
+                if (r.participants?.length) {
+                    html += `<h4 class="search-cat-title">Participants (${r.participants.length})</h4>`;
+                    html += '<table class="newspaper-table admin-table"><thead><tr><th>ID</th><th>Name</th><th>College</th><th>Dept</th><th>Year</th><th>Phone</th><th>Email</th></tr></thead><tbody>';
+                    r.participants.forEach(p => {
+                        html += `<tr><td>${p.participant_id}</td><td><strong>${esc(p.name)}</strong></td><td>${esc(p.college)}</td><td>${esc(p.department)}</td><td>${p.year}</td><td>${esc(p.phone)}</td><td>${esc(p.email)}</td></tr>`;
+                    });
+                    html += '</tbody></table>';
+                }
+
+                // Events results
+                if (r.events?.length) {
+                    html += `<h4 class="search-cat-title">Events (${r.events.length})</h4>`;
+                    html += '<table class="newspaper-table admin-table"><thead><tr><th>ID</th><th>Name</th><th>Category</th><th>Type</th><th>Fee</th><th>Prize</th></tr></thead><tbody>';
+                    r.events.forEach(e => {
+                        html += `<tr><td>${e.event_id}</td><td><strong>${esc(e.event_name)}</strong></td><td>${esc(e.category)}</td><td>${esc(e.type)}</td><td>₹${e.registration_fee}</td><td>₹${e.prize_pool}</td></tr>`;
+                    });
+                    html += '</tbody></table>';
+                }
+
+                // Registrations results
+                if (r.registrations?.length) {
+                    html += `<h4 class="search-cat-title">Registrations (${r.registrations.length})</h4>`;
+                    html += '<table class="newspaper-table admin-table"><thead><tr><th>Participant</th><th>Event</th><th>Date</th><th>Payment</th></tr></thead><tbody>';
+                    r.registrations.forEach(reg => {
+                        const cls = (reg.payment_status || '').toLowerCase() === 'paid' ? 'status-paid' : 'status-pending';
+                        html += `<tr><td><strong>${esc(reg.name)}</strong></td><td>${esc(reg.event_name)}</td><td>${reg.reg_date}</td><td class="${cls}">${reg.payment_status}</td></tr>`;
+                    });
+                    html += '</tbody></table>';
+                }
+            }
+
+            content.innerHTML = html;
+        } catch (err) {
+            content.innerHTML = '<p class="loading-text">Search failed. Please try again.</p>';
+        }
+    };
+
+    window.clearSearch = function() {
+        searchInput.value = '';
+        document.getElementById('admin-search-results').style.display = 'none';
+    };
+
+    window.adminLogout = async function() {
+        try {
+            await fetch('/admin/logout', { method: 'POST' });
+        } catch (e) {}
+        gate.style.display = 'flex';
+        dashboard.style.display = 'none';
+        keyInput.value = '';
+        gateError.style.display = 'none';
+    };
+
+    function forceLogout() {
+        gate.style.display = 'flex';
+        dashboard.style.display = 'none';
+        gateError.textContent = 'Session expired. Please log in again.';
+        gateError.style.display = 'block';
+    }
+
+    // ── Add Event form handler ──
+    const addEventForm = document.getElementById('admin-add-event-form');
+    if (addEventForm) {
+        addEventForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const msgBox = document.getElementById('admin-event-msg');
+            msgBox.textContent = 'Adding event...';
+            msgBox.className = 'form-message';
+            msgBox.style.display = 'block';
+
+            const formData = new FormData(addEventForm);
+            const params = new URLSearchParams();
+            for (const [key, value] of formData.entries()) {
+                params.append(key, value);
+            }
+
+            try {
+                const res = await fetch(`/admin/api/events/add?${params.toString()}`, {
+                    method: 'POST'
+                });
+
+                if (res.status === 401) { forceLogout(); return; }
+
+                const result = await res.json();
+
+                if (res.ok) {
+                    msgBox.textContent = result.message || 'Event added successfully!';
+                    msgBox.classList.add('success');
+                    addEventForm.reset();
+                    loadEvents(); // Reload the table
+                    loadStats();  // Reload the stats
+                } else {
+                    msgBox.textContent = result.error || 'An error occurred.';
+                    msgBox.classList.add('error');
+                }
+            } catch (err) {
+                msgBox.textContent = 'Failed to communicate with the server.';
+                msgBox.classList.add('error');
+            }
+        });
+    }
+
+    // ── Track current tab record count ──
+    const tabCounts = {};
+    function updateRecordCount(tab, count) {
+        tabCounts[tab] = count;
+        const activeTab = document.querySelector('.admin-tab.active')?.getAttribute('data-tab');
+        if (activeTab && tabCounts[activeTab] !== undefined) {
+            document.getElementById('admin-record-count').textContent = `${tabCounts[activeTab]} record(s) displayed`;
+        }
+    }
+
+    // Update count label on tab switch
+    const origSwitch = window.switchAdminTab;
+    window.switchAdminTab = function(tab) {
+        origSwitch(tab);
+        if (tabCounts[tab] !== undefined) {
+            document.getElementById('admin-record-count').textContent = `${tabCounts[tab]} record(s) displayed`;
+        }
+    };
+
+    // ── XSS safety ──
+    function esc(str) {
+        if (!str) return '';
+        const div = document.createElement('div');
+        div.textContent = str;
+        return div.innerHTML;
+    }
+    window.esc = esc;
+})();
+</script>
+
+{% endblock %}

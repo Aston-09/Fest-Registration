@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Registrations - The Cultural Fest Gazette{% endblock %}
+
+{% block content %}
+<div class="page-header parallax-bg" data-parallax data-parallax-speed="0.2">
+    <h2 class="page-title">REGISTRATIONS</h2>
+    <p class="page-subtitle">The Official Ledger of Enrollments</p>
+</div>
+
+<div class="torn-divider section-divider"></div>
+
+<div class="main-content">
+    <div class="ledger-container">
+        <h3 class="section-title">Official Registry Records</h3>
+        <p class="ledger-description">The following table contains the cross-referenced records of participants and their respective event enrollments, maintained by the organizing committee.</p>
+        
+        <div class="table-responsive">
+            <table class="newspaper-table ledger-table" id="registrations-table">
+                <thead>
+                    <tr>
+                        <th>Participant Name</th>
+                        <th>Event Enrolled</th>
+                        <th>Date of Record</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td colspan="4" class="loading-text">Examining the ledger...</td></tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

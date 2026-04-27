@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+
+{% block title %}Events - The Cultural Fest Gazette{% endblock %}
+
+{% block content %}
+<div class="page-header parallax-bg" data-parallax data-parallax-speed="-0.1">
+    <h2 class="page-title">EVENTS</h2>
+    <p class="page-subtitle">A curated selection of intellectual and artistic pursuits.</p>
+</div>
+
+<div class="torn-divider section-divider"></div>
+
+<div class="main-content grid-layout">
+    <div class="column-span-2">
+        <div class="events-grid" id="events-container">
+            <p class="loading-text">Fetching the schedule...</p>
+        </div>
+    </div>
+
+    <aside class="column-span-1">
+        <!-- Event proposal moved to Admin Panel -->
+        <div class="classified-box" style="margin-top: 2rem;">
+            <h4 class="classified-title">Event Registration</h4>
+            <p class="classified-desc">Secure your place in the upcoming events.</p>
+            <form id="register-event-form" class="newspaper-form">
+                <div class="form-group">
+                    <label for="participant_id">Participant ID</label>
+                    <input type="number" id="participant_id" name="participant_id" required>
+                </div>
+                <div class="form-group">
+                    <label for="event_id">Event ID</label>
+                    <input type="number" id="event_id" name="event_id" required>
+                </div>
+                <button type="submit" class="btn-primary">Enroll</button>
+            </form>
+            <div id="register-msg" class="form-message"></div>
+        </div>
+    </aside>
+</div>
+{% endblock %}

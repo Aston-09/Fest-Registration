@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+
+{% block title %}Register - The Cultural Fest Gazette{% endblock %}
+
+{% block content %}
+<div class="page-header">
+    <h2 class="page-title">REGISTRATION</h2>
+    <p class="page-subtitle">Inscribe your name in the grand chronicles of the Cultural Fest.</p>
+</div>
+
+<div class="main-content registration-page">
+
+    <!-- Registration Type Selector -->
+    <div class="reg-type-selector">
+        <h3 class="reg-type-heading">How would you like to register?</h3>
+        <div class="reg-type-options">
+            <button class="reg-type-btn active" id="btn-single" onclick="switchRegType('single')">
+                <span class="reg-type-icon">&#9998;</span>
+                <span class="reg-type-label">Individual</span>
+                <span class="reg-type-desc">A single soul, bold and brave</span>
+            </button>
+            <button class="reg-type-btn" id="btn-group" onclick="switchRegType('group')">
+                <span class="reg-type-icon">&#9881;</span>
+                <span class="reg-type-label">Group</span>
+                <span class="reg-type-desc">A band of merry scholars</span>
+            </button>
+        </div>
+    </div>
+
+    <!-- ===== SINGLE REGISTRATION ===== -->
+    <div class="reg-form-container" id="single-form-container">
+        <div class="classified-box reg-box-wide">
+            <h4 class="classified-title">Individual Registration</h4>
+            <p class="classified-desc">Submit your details below to be inscribed into the official registry of participants.</p>
+            
+            <form id="participant-form" class="newspaper-form reg-form-grid">
+                <div class="form-group">
+                    <label for="name">Full Name</label>
+                    <input type="text" id="name" name="name" placeholder="e.g. John Doe" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="college">College</label>
+                    <input type="text" id="college" name="college" placeholder="e.g. St. Xavier's College" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="department">Department</label>
+                    <input type="text" id="department" name="department" placeholder="e.g. Computer Science" required>
+                </div>
+                
+                <div class="form-row">
+                    <div class="form-group half">
+                        <label for="year">Year</label>
+                        <input type="number" id="year" name="year" min="1" max="5" placeholder="1-5" required>
+                    </div>
+                    <div class="form-group half">
+                        <label for="phone">Telephone</label>
+                        <input type="tel" id="phone" name="phone" placeholder="+91..." required>
+                    </div>
+                </div>
+                
+                <div class="form-group">
+                    <label for="email">Electronic Mail</label>
+                    <input type="email" id="email" name="email" placeholder="you@mail.com" required>
+                </div>
+                
+                <button type="submit" class="btn-primary">Inscribe My Name</button>
+            </form>
+            <div id="participant-msg" class="form-message"></div>
+        </div>
+    </div>
+
+    <!-- ===== GROUP REGISTRATION ===== -->
+    <div class="reg-form-container hidden" id="group-form-container">
+        <div class="classified-box reg-box-wide">
+            <h4 class="classified-title">Group Registration</h4>
+            <p class="classified-desc">Register multiple participants at once. Fill in details for each member of your troupe.</p>
+            
+            <form id="group-form" class="newspaper-form">
+                <div class="group-info-bar">
+                    <span class="group-count-label">Members: <strong id="member-count">1</strong></span>
+                    <button type="button" class="btn-add-member" id="add-member-btn" onclick="addGroupMember()">+ Add Another Member</button>
+                </div>
+
+                <div id="group-members-list">
+                    <!-- First member (always present) -->
+                    <div class="group-member-card" data-index="1">
+                        <div class="member-card-header">
+                            <span class="member-number">Member #1</span>
+                        </div>
+                        <div class="reg-form-grid">
+                            <div class="form-group">
+                                <label>Full Name</label>
+                                <input type="text" name="g_name_1" placeholder="Full Name" required>
+                            </div>
+                            <div class="form-group">
+                                <label>College</label>
+                                <input type="text" name="g_college_1" placeholder="College" required>
+                            </div>
+                            <div class="form-group">
+                                <label>Department</label>
+                                <input type="text" name="g_department_1" placeholder="Department" required>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group half">
+                                    <label>Year</label>
+                                    <input type="number" name="g_year_1" min="1" max="5" placeholder="1-5" required>
+                                </div>
+                                <div class="form-group half">
+                                    <label>Telephone</label>
+                                    <input type="tel" name="g_phone_1" placeholder="+91..." required>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label>Electronic Mail</label>
+                                <input type="email" name="g_email_1" placeholder="email@mail.com" required>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <button type="submit" class="btn-primary">Register Entire Group</button>
+            </form>
+            <div id="group-msg" class="form-message"></div>
+        </div>
+    </div>
+
+</div>
+{% endblock %}
