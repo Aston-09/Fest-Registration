@@ -1,9 +1,4 @@
 """
-╔══════════════════════════════════════════════════════════════╗
-║           CULTURAL FEST — CLI ADMIN TOOL                     ║
-║  Manage encryption, search data, and view stats from the     ║
-║  command line. No web exposure needed.                       ║
-╚══════════════════════════════════════════════════════════════╝
 
 Usage:
     python admin_cli.py generate-key
