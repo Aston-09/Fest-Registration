@@ -2,6 +2,42 @@
 
 A FastAPI and MySQL-based web application for managing cultural fest registrations, featuring an encrypted database, secure admin panel, and an aesthetic newspaper-themed frontend.
 
+## Demo & Previews
+
+<div align="center">
+  <img src="assets/preview-homepage.png" alt="Homepage - The Cultural Fest Gazette" width="800"/>
+  <br/>
+  <em>Homepage - The Cultural Fest Gazette</em>
+</div>
+<br/>
+
+<div align="center">
+  <img src="assets/preview-events-registration.png" alt="Events and Event Registration" width="800"/>
+  <br/>
+  <em>Events and Event Registration</em>
+</div>
+<br/>
+
+<div align="center">
+  <img src="assets/preview-individual-registration.png" alt="Individual Registration Form" width="800"/>
+  <br/>
+  <em>Individual Registration Form</em>
+</div>
+<br/>
+
+<div align="center">
+  <img src="assets/preview-announcements.png" alt="Latest Announcements Section" width="800"/>
+  <br/>
+  <em>Latest Announcements Section</em>
+</div>
+<br/>
+
+<div align="center">
+  <img src="assets/preview-admin-add-event.png" alt="Admin Panel - Add New Event" width="800"/>
+  <br/>
+  <em>Admin Panel - Add New Event</em>
+</div>
+
 ## Features
 - **Frontend**: Newspaper-themed dynamic interface with GPU-accelerated parallax scrolling.
 - **Backend**: FastAPI for high-performance async routing.
