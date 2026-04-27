@@ -37,6 +37,13 @@ A FastAPI and MySQL-based web application for managing cultural fest registratio
   <br/>
   <em>Admin Panel - Add New Event</em>
 </div>
+<br/>
+
+<div align="center">
+  <img src="assets/preview-editors-office.png" alt="Admin Panel - Editor's Office" width="800"/>
+  <br/>
+  <em>Admin Panel - Editor's Office</em>
+</div>
 
 ## Features
 - **Frontend**: Newspaper-themed dynamic interface with GPU-accelerated parallax scrolling.
